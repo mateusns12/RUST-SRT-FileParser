@@ -4,6 +4,7 @@
 #![allow(unused_imports)]
 #![allow(unused_assignments)]
 #![allow(unused_must_use)]
+#![allow(non_snake_case)]
 
 use std::io::{stdin,stdout,BufWriter,BufReader,prelude::*};
 use std::fs::File;
@@ -25,47 +26,31 @@ fn main() {
             menu(&args[1]);
             //println!("Exists");
         }else{
+            println!("\n\x1b[31mFile can't be openned or is invalid\x1b[0m\n");
             println!("{}", usage);
         }
-
-        /*
-        FILE * fp;
-		if((fp = fopen(argv[1],"r")) == NULL){
-			printf(ANSI_COLOR_RED "\nFile can't be openned or is invalid\n" ANSI_COLOR_RESET);
-			printf("%s",usage);
-		}else{
-		fclose(fp);
-		printf("\nOpenning File : %s\n",argv[1]);
-		Menu(argv[1]);
-		}
-         */
-        //println!("{:?}",&args[1]);
     }
     println!("\n\x1b[35mGoodbye\x1b[0m \u{1f984}");   
 }
 
-fn menu(IN_file:&str){
+fn menu(in_file:&str){
     let mut a_input = String::new();
     let mut option:i32;
     let pat: &[_] = &['\r','\n',' '];    
     loop{        
         stdout().flush().unwrap();
-        print!("Choose an option: "); 
+        print!("\nChoose an option: "); 
         stdout().flush().unwrap();    
         stdin().read_line(&mut a_input).unwrap();         
         option = a_input.trim_matches(pat).parse::<i32>().unwrap_or(0);        
         match option {
-            1 => parse_file(IN_file),
-            2 => print_file(IN_file),
+            1 => parse_file(in_file),
+            2 => print_file(in_file),
             6 => break,
             _ => println!("Invalid"),    
         }
         a_input.clear();
     }    
-}
-
-fn parse_file(IN_file:&str){
-    println!("opt parse");
 }
 
 fn print_file(files:&str){
@@ -81,4 +66,21 @@ fn print_file(files:&str){
     for line in reader.lines(){
         println!("{}", line.unwrap());
     }
+}
+
+fn parse_file(in_file:&str){
+    let out_path = Path::new("outfile.srt");
+    let out_display = out_path.display();
+    let mut out_file = match File::create(&out_path) {
+        Err(why) => panic!("couldn't create {}: {}", out_display, why),
+        Ok(out_file) => out_file,
+    };
+
+    let in_path = Path::new(in_file);
+    let in_display = in_path.display();
+    //let mut file = File::open(&path).expect("Cant open file");
+    let mut file = match File::open(&in_path){
+        Err(why) => panic!("couldn't open {}: {}", in_display, why),
+        Ok(file) => file,
+    };
 }
