@@ -79,8 +79,15 @@ fn parse_file(in_file:&str){
     let in_path = Path::new(in_file);
     let in_display = in_path.display();
     //let mut file = File::open(&path).expect("Cant open file");
-    let mut file = match File::open(&in_path){
+    let mut in_file = match File::open(&in_path){
         Err(why) => panic!("couldn't open {}: {}", in_display, why),
-        Ok(file) => file,
+        Ok(in_file) => in_file,
     };
+
+    let mut writer = BufWriter::new(out_file);
+    let mut reader = BufReader::new(in_file);
+
+    for line in reader.lines(){
+        write!(writer,"{}\n",line.unwrap()).unwrap();
+    }
 }
