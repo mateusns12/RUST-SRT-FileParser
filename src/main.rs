@@ -138,7 +138,7 @@ fn get_timestamp(buffer:&str,time_right:&mut Time,time_left:&mut Time) -> bool{
     let mut mins = iter[1].parse::<i32>().unwrap_or(-1);
     let mut secs = iter[2].parse::<i32>().unwrap_or(-1);
     let mut mill = iter[3].parse::<i32>().unwrap_or(-1);    
-    if hour == -1{
+    if hour|mins|secs|mill == -1{
         return false
     }else{
         time_left.hour = hour; time_left.mins = mins; 
@@ -148,7 +148,7 @@ fn get_timestamp(buffer:&str,time_right:&mut Time,time_left:&mut Time) -> bool{
     mins = iter[6].parse::<i32>().unwrap_or(-1);
     secs = iter[7].parse::<i32>().unwrap_or(-1);
     mill = iter[8].parse::<i32>().unwrap_or(-1);
-    if hour == -1{
+    if hour|mins|secs|mill == -1{
         return false
     }else{
         time_right.hour = hour; time_right.mins = mins; 
